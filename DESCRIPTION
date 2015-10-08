@@ -1,0 +1,11 @@
+Package: plot11R
+Type: Package
+Title: Plotting and Calculating kpi's for the `nine11R` family.
+Version: 0.1
+Date: 2015-10-08
+Author: Adrian Schmid
+Maintainer: Adrian Schmid <adrian.schmid@fhsg.ch>
+Description: Family of functions for plotting graphics and calculating kpis for the `nine11R` family. Available are: maps, histograms, kpis and tables.
+License: tbd
+LazyData: TRUE
+Suggests: testthat
