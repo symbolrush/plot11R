@@ -2,7 +2,8 @@
 % Please edit documentation in R/helpers.R
 \name{fhsblue}
 \alias{fhsblue}
-\title{fhsblue: brings you the funky fhsblue and makes all graphics corporate design compatible.}
+\title{fhsblue: brings you the funky fhsblue and makes all graphics corporate design
+compatible.}
 \usage{
 fhsblue()
 }
@@ -10,6 +11,7 @@ fhsblue()
 fhsblue The famous color of all colors
 }
 \description{
-fhsblue: brings you the funky fhsblue and makes all graphics corporate design compatible.
+fhsblue: brings you the funky fhsblue and makes all graphics corporate design
+compatible.
 }
 
