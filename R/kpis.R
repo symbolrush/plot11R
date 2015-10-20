@@ -1,6 +1,5 @@
-#' kpiEventsInTime: Calculates the percentage of events of priority 1&2 which
+#' kpiEventsInTime: Calculates the percentage of events which
 #' have a dtService of less than 15min. In other words: which are in time.
-#' Rounded to 1 decimalplace.
 #'
 #' @param simEvents A set of simEvents
 #'
@@ -8,7 +7,7 @@
 kpiEventsInTime <- function(simEvents) {
   return(
     round(
-      nrow(simEvents[simEvents$dtService < 15*60,])/nrow(simEvents)*100, 1))
+      nrow(simEvents[simEvents$dtService < 15*60,])/nrow(simEvents)*100, 0))
 }
 
 #' kpiEventsInTimeDelta: Calculates the delta of the percentage of the events
@@ -64,10 +63,7 @@ kpiEventsByOrganisationPrio12 <- function(simScenario, organisation) {
 #' @param simEvents
 #' @param simEventsRef
 #'
-#' @return
-#' @export
-#'
-#' @examples
+#' @return kpiEventsFaster
 kpiEventsFaster <- function(simEvents, simEventsRef) {
   nrow(tableEventsNewFaster(simEvents, simEventsRef)) -
     nrow(tableEventsNewSlower(simEvents, simEventsRef))
