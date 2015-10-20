@@ -31,7 +31,7 @@ mapOrganisationPrio12 <- function(simScenario) {
       stroke = FALSE,
       radius = nrOfEvents/50,
       color = color,
-      popup = paste0(organisation, ': ',nrOfEvents, ' Events, davon ', round(percentage, 1), '% innerhalb 15min. erreicht.'),
+      popup = paste0(organisation, ': ',nrOfEvents, ' Events, davon ', round(percentage, 0), '% innerhalb 15min. erreicht.'),
       fillOpacity = 0.6) %>%
     addLayersControl(
       baseGroups = c("OSM", "Stamen.TonerLite")
