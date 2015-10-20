@@ -33,3 +33,9 @@ cpDtService <- function(x){
 filterPrio12 <- function(simEvents) {
   return(simEvents[simEvents$priority %in% c(1,2), ])
 }
+
+
+filterLUKS <- function(simMissions) {
+  simMissions[!(simMissions$vehicleId %in% c(23:26,1000)),]
+}
+
