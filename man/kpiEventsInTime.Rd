@@ -2,9 +2,8 @@
 % Please edit documentation in R/kpis.R
 \name{kpiEventsInTime}
 \alias{kpiEventsInTime}
-\title{kpiEventsInTime: Calculates the percentage of events of priority 1&2 which
-have a dtService of less than 15min. In other words: which are in time.
-Rounded to 1 decimalplace.}
+\title{kpiEventsInTime: Calculates the percentage of events which
+have a dtService of less than 15min. In other words: which are in time.}
 \usage{
 kpiEventsInTime(simEvents)
 }
@@ -15,8 +14,7 @@ kpiEventsInTime(simEvents)
 EventsInTime A percentage of the fraction of the events in time
 }
 \description{
-kpiEventsInTime: Calculates the percentage of events of priority 1&2 which
+kpiEventsInTime: Calculates the percentage of events which
 have a dtService of less than 15min. In other words: which are in time.
-Rounded to 1 decimalplace.
 }
 
