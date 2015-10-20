@@ -18,12 +18,23 @@ kpiEventsInTime <- function(simEvents) {
 #'
 #' @return EventsInTimeDelta A numeric
 kpiEventsInTimeDelta <- function(simEvents, simEventsBefore) {
-  percentage <- nrow(simEvents[simEvents$dtService < 15*60,])/nrow(simEvents)*100
+  percentage <- nrow(
+    simEvents[
+      simEvents$dtService < 15*60,])/nrow(simEvents)*100
   percentageBefore <- nrow(
-    simEventsBefore[simEventsBefore$dtService < 15*60,])/nrow(simEventsBefore)*100
+    simEventsBefore[
+      simEventsBefore$dtService < 15*60,])/nrow(simEventsBefore)*100
   round(percentage - percentageBefore, 1)
 }
 
+
+#' kpiEventsNewInTime(): Errechnet die Anzahl der Ereignisse, die neu innerhalb
+#' 15 min. erreicht werden.
+#'
+#' @param simEvents
+#' @param simEventsBefore
+#'
+#' @return numeric
 kpiEventsNewInTime <- function(simEvents, simEventsBefore) {
   nrow(plot11R::tableEventsNewInTime(simEvents, simEventsBefore))
 }
