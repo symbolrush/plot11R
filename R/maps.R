@@ -5,7 +5,8 @@
 #'
 #' @return map A leaflet object
 mapOrganisationPrio12 <- function(simScenario) {
-  organisation <- c("RD Luzern", "RD Sursee", "RD Wolhusen")
+  # organisation <- c("RD Luzern", "RD Sursee", "RD Wolhusen")
+  organisation <- c("Sano", "STS", "FMI", "SNBe", "RSE", "ARB", "HJB", "SRO")
   lat <- c()
   lng <- c()
   percentage <- c()
@@ -29,7 +30,8 @@ mapOrganisationPrio12 <- function(simScenario) {
       lat = lat,
       lng = lng,
       stroke = FALSE,
-      radius = nrOfEvents/50,
+      # radius = nrOfEvents/50,
+      radius = nrOfEvents/150,
       color = color,
       popup = paste0(organisation, ': ',nrOfEvents, ' Events, davon ', round(percentage, 0), '% innerhalb 15min. erreicht.'),
       fillOpacity = 0.6) %>%
