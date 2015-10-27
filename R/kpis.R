@@ -43,8 +43,15 @@ kpiEventsNewNotInTime <- function(simEvents, simEventsBefore) {
   nrow(plot11R::tableEventsNewNotInTime(simEvents, simEventsBefore))
 }
 
-kpiMissionsExternalServiceNeeded <- function(simMissions) {
-  length(simMissions$vehicleId[simMissions$vehicleId %in% c(1000,2000)])
+#' kpiMissionsExternalServiceNeeded(): Returns the number of missions that used
+#' the external vehicles as specified in vehicleIdExt
+#'
+#' @param simMissions A set of simMissions
+#' @param vehicleIdExt A (vector) of vehicleId's used by external services.
+#'
+#' @return nrMissionsExternalServiceNeeded A numeric
+kpiMissionsExternalServiceNeeded <- function(simMissions, vehicleIdExt) {
+  length(simMissions$vehicleId[simMissions$vehicleId %in% vehicleIdExt])
 }
 
 kpiMissionsByOrganisation <- function(simScenario, organisation) {
@@ -53,16 +60,18 @@ kpiMissionsByOrganisation <- function(simScenario, organisation) {
 }
 
 kpiEventsInTimeByOrganisationPrio12 <- function(simScenario, organisation) {
-  vehicleId <- simScenario$vehicles$id[simScenario$vehicles$organisation == organisation]
-  eventId <- unique(simScenario$missions$eventId[simScenario$missions$vehicleId %in% vehicleId])
+  #vehicleId <- simScenario$vehicles$id[simScenario$vehicles$organisation == organisation]
+  #eventId <- unique(simScenario$missions$eventId[simScenario$missions$vehicleId %in% vehicleId])
+  eventId <- unique(simScenario$missions$eventId[simScenario$missions$organisation == organisation])
   simEvents <- simScenario$events[simScenario$events$id %in% eventId, ]
   simEvents <- filterPrio12(simEvents)
   nrow(simEvents[simEvents$dtService < 15*60, ])/nrow(simEvents)*100
 }
 
 kpiEventsByOrganisationPrio12 <- function(simScenario, organisation) {
-  vehicleId <- simScenario$vehicles$id[simScenario$vehicles$organisation == organisation]
-  eventId <- unique(simScenario$missions$eventId[simScenario$missions$vehicleId %in% vehicleId])
+  #vehicleId <- simScenario$vehicles$id[simScenario$vehicles$organisation == organisation]
+ # eventId <- unique(simScenario$missions$eventId[simScenario$missions$vehicleId %in% vehicleId])
+  eventId <- unique(simScenario$missions$eventId[simScenario$missions$organisation == organisation])
   simEvents <- simScenario$events[simScenario$events$id %in% eventId, ]
   simEvents <- filterPrio12(simEvents)
   nrow(simEvents)
