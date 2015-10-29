@@ -12,14 +12,36 @@ tableDtService <- function(simScenario, simScenarioRef) {
     simMissions$dtToPoA != simMissionsBefore$dtToPoA, ]
   missionsBefore <- simMissionsBefore[
     simMissionsBefore$dtToPoA != simMissions$dtToPoA, ]
+  waytime <- c()
+  waytimeBefore <- c()
+#   for (i in 1:nrow(missions)) {
+#     waytime[i] <- nine11R::getWaytimeOSRM(
+#       missions$lat[i],
+#       missions$lng[i],
+#       simScenario$vehicles$lat[missions$vehicleId],
+#       simScenario$vehicles$lng[missions$vehicleId]
+#     )
+#     waytimeBefore[i] <- nine11R::getWaytimeOSRM(
+#       missionsBefore$lat[i],
+#       missionsBefore$lng[i],
+#       simScenarioRef$vehicles$lat[missionsBefore$vehicleId],
+#       simScenarioRef$vehicles$lng[missionsBefore$vehicleId]
+#     )
+#  }
+
+
   return(data.frame(
     id = missions$id,
+    priority = missions$priority,
+    organisation = missions$organisation,
     vehicleIdBefore = missionsBefore$vehicleId,
     vehicleNameBefore = simScenarioRef$vehicles$name[missionsBefore$vehicleId],
     vehicleId = missions$vehicleId,
     vehicleName = simScenario$vehicles$name[missions$vehicleId],
     dtToPoABefore = missionsBefore$dtToPoA,
     dtToPoA = missions$dtToPoA,
+#     waytimeBefore = waytimeBefore,
+#     waytime = waytime,
     lat = missions$lat,
     lng = missions$lng
   ))
