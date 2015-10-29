@@ -4,10 +4,10 @@
 \alias{histDtService}
 \title{histDtService: that famous (but not very useful) histogram of all events.}
 \usage{
-histDtService(simEvents)
+histDtService(simData)
 }
 \arguments{
-\item{simEvents}{A set of simEvents}
+\item{simData}{A set of simEvents or simMissions}
 }
 \value{
 plotted histogram
