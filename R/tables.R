@@ -14,20 +14,23 @@ tableDtService <- function(simScenario, simScenarioRef) {
     simMissionsBefore$dtToPoA != simMissions$dtToPoA, ]
   waytime <- c()
   waytimeBefore <- c()
-#   for (i in 1:nrow(missions)) {
-#     waytime[i] <- nine11R::getWaytimeOSRM(
-#       missions$lat[i],
-#       missions$lng[i],
-#       simScenario$vehicles$lat[missions$vehicleId],
-#       simScenario$vehicles$lng[missions$vehicleId]
-#     )
-#     waytimeBefore[i] <- nine11R::getWaytimeOSRM(
-#       missionsBefore$lat[i],
-#       missionsBefore$lng[i],
-#       simScenarioRef$vehicles$lat[missionsBefore$vehicleId],
-#       simScenarioRef$vehicles$lng[missionsBefore$vehicleId]
-#     )
-#  }
+  cache <- cacheR::loadCache("Bern")
+  for (i in 1:nrow(missions)) {
+    waytime[i] <- nine11R::getWaytime(
+      cache,
+      simScenario$vehicles$lat[missions$vehicleId[i]],
+      simScenario$vehicles$lng[missions$vehicleId[i]],
+      missions$lat[i],
+      missions$lng[i]
+    )$waytime
+    waytimeBefore[i] <- nine11R::getWaytime(
+      cache,
+      simScenarioRef$vehicles$lat[missionsBefore$vehicleId[i]],
+      simScenarioRef$vehicles$lng[missionsBefore$vehicleId[i]],
+      missionsBefore$lat[i],
+      missionsBefore$lng[i]
+    )$waytime
+ }
 
 
   return(data.frame(
@@ -40,8 +43,8 @@ tableDtService <- function(simScenario, simScenarioRef) {
     vehicleName = simScenario$vehicles$name[missions$vehicleId],
     dtToPoABefore = missionsBefore$dtToPoA,
     dtToPoA = missions$dtToPoA,
-#     waytimeBefore = waytimeBefore,
-#     waytime = waytime,
+    waytimeBefore = waytimeBefore,
+    waytime = waytime,
     lat = missions$lat,
     lng = missions$lng
   ))
