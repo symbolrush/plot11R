@@ -16,7 +16,8 @@ mapOrganisationPrio12 <- function(simScenario) {
   for (i in organisation) {
     lat[j] <- mean(simScenario$vehicles$lat[simScenario$vehicles$organisation == i])
     lng[j] <- mean(simScenario$vehicles$lng[simScenario$vehicles$organisation == i])
-    percentage[j] <- plot11R::kpiEventsInTimeByOrganisationPrio12(simScenario, i)
+    percentage[j] <- round(
+      plot11R::kpiEventsInTimeByOrganisationPrio12(simScenario, i), 0)
     nrOfEvents[j] <- plot11R::kpiEventsByOrganisationPrio12(simScenario, i)
     color[j] <- plot11R::cpDtService(percentage[j])
     j <- j+1
@@ -33,7 +34,7 @@ mapOrganisationPrio12 <- function(simScenario) {
       # radius = nrOfEvents/50,
       radius = nrOfEvents/150,
       color = color,
-      popup = paste0(organisation, ': ',nrOfEvents, ' Events, davon ', round(percentage, 0), '% innerhalb 15min. erreicht.'),
+      popup = paste0(organisation, ': ',nrOfEvents, ' Events, davon ', percentage, '% innerhalb 15min. erreicht.'),
       fillOpacity = 0.6) %>%
     addLayersControl(
       baseGroups = c("OSM", "Stamen.TonerLite")
