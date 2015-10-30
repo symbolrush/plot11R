@@ -100,6 +100,14 @@ tableEventsNewFaster <- function(simEvents, simEventsBefore) {
   return(simEvents[simEvents$dtService < simEventsBefore$dtService, ])
 }
 
+tableMissionsNewFaster <- function(simMissions, simMissionsBefore) {
+  return(simMissions[simMissions$dtToPoA < simMissionsBefore$dtToPoA, ])
+}
+
 tableEventsNewSlower <- function(simEvents, simEventsBefore) {
   return(simEvents[simEvents$dtService > simEventsBefore$dtService, ])
+}
+
+tableMissionsNewSlower <- function(simMissions, simMissionsBefore) {
+  return(simMissions[simMissions$dtToPoA > simMissionsBefore$dtToPoA, ])
 }
