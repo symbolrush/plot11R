@@ -20,3 +20,21 @@ boxDtLaunchByVehicleName <- function(simScenario) {
   return("OK")
 }
 
+
+#' boxDtLaunchByOrganisation(): Druckt einen Boxplot der Ausrückzeiten für alle
+#' Stützpunkte in simData$vehicles
+#'
+#' @param simScenario A simScenario
+#'
+#' @return ok
+boxDtLaunchByOrganisation <- function(simMissions) {
+  for (i in unique(simMissions$organisation)) {
+    boxplot(
+        simMissions$dtLaunch[
+          simMissions$organisation == i]/60,
+        ylim = c(0,10),
+        main = i
+      )
+  }
+  return("OK")
+}
