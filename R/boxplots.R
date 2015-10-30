@@ -33,7 +33,10 @@ boxDtLaunchByOrganisation <- function(simMissions) {
         simMissions$dtLaunch[
           simMissions$organisation == i]/60,
         ylim = c(0,10),
-        main = i
+        main = i,
+        col = fhsblue(),
+        ylab = "Ausrückzeit in Minuten",
+        range = 0
       )
   }
   return("OK")
