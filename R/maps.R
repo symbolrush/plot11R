@@ -51,20 +51,20 @@ mapOrganisationPrio12 <- function(simScenario) {
 #'
 #' @return mapPoAPrio12 A leaflet map
 mapPoAPrio12 <- function(simMissions) {
-  lat <- c()
+  lat <- unique(simMissions$lat)
   lng <- c()
-  percentage <- c()
   nrOfMissions <- c()
+  percentage <- c()
   color <- c()
-  j <- 1
-  for (i in unique(simMissions$lat)) {
-    lat[j] <- simMissions$lat[simMissions$lat == i][1]
-    lng[j] <- simMissions$lng[simMissions$lat == i][1]
-    percentage[j] <- round(
-      plot11R::kpiMissionsInTimePrio12(simMissions[simMissions$lat == i, ]), 0)
-    nrOfMissions[j] <- length(simMissions$lat[simMissions$lat == i])
-    color[j] <- plot11R::cpDtService(percentage[j])
-    j <- j + 1
+
+  for (i in 1:length(lat)) {
+    lng[i] <- simMissions$lng[
+      simMissions$lat == lat[i]][1]
+    nrOfMissions[i] <- nrow(
+      filterPrio12(simMissions[simMissions$lat == lat[i],]))
+    percentage[i] <- round(
+      plot11R::kpiMissionsInTime(filterPrio12(simMissions[simMissions$lat == i, ])), 0)
+    color[i] <- plot11R::cpDtService(percentage[i])
   }
 
   library(leaflet)
@@ -78,8 +78,8 @@ mapPoAPrio12 <- function(simMissions) {
                        percentage, " innerhalb 15 Min. erreicht."),
                      color = color,
                      stroke = FALSE,
-                     radius = nrOfMissions + 5,
-                     fillOpacity = 0.8) %>%
+                     radius = nrOfMissions/150 + 5,
+                     fillOpacity = 0.7) %>%
     addLayersControl(
       baseGroups = c("OSM", "Stamen.TonerLite")
     )
@@ -110,33 +110,57 @@ mapDtService <- function(simEvents, center_lat, center_lng) {
 
 
 
-mapDtServiceDeltaInTime <- function(simEvents, simEventsBefore) {
-  simEventsNewInTime <- plot11R::tableEventsNewInTime(simEvents, simEventsBefore)
-  simEventsNewNotInTime <- plot11R::tableEventsNewNotInTime(simEvents, simEventsBefore)
+mapDtServiceDeltaInTime <- function(simMissions, simMissionsRef) {
+  simMissionsNewInTime <- plot11R::tableMissionsNewInTime(
+    simMissions, simMissionsRef)
+  simMissionsNewNotInTime <- plot11R::tableMissionsNewNotInTime(
+    simMissions, simMissionsRef)
+
+  nrOfMissionsNewInTime <- c()
+  nrOfMissionsNewNotInTime <- c()
+  latNewInTime <- unique(simMissionsNewInTime$lat)
+  lngNewInTime <- c()
+  latNewNotInTime <- unique(simMissionsNewNotInTime$lat)
+  lngNewNotInTime <- c()
+  for (i in 1:length(latNewInTime)) {
+    lngNewInTime[i] <- simMissionsNewInTime$lng[
+      simMissionsNewInTime$lat == latNewInTime[i]][1]
+    nrOfMissionsNewInTime[i] <- nrow(
+      simMissionsNewInTime[simMissionsNewInTime$lat == latNewInTime[i],])
+  }
+  for (i in 1:length(latNewNotInTime)) {
+    lngNewNotInTime[i] <- simMissionsNewNotInTime$lng[
+      simMissionsNewNotInTime$lat == latNewNotInTime[i]][1]
+    nrOfMissionsNewNotInTime[i] <- nrow(
+      simMissionsNewNotInTime[simMissionsNewNotInTime$lat == latNewNotInTime[i],])
+  }
+
+
+#   simEventsNewInTime <- plot11R::tableEventsNewInTime(simEvents, simEventsBefore)
+#   simEventsNewNotInTime <- plot11R::tableEventsNewNotInTime(simEvents, simEventsBefore)
 
   library(leaflet)
   leaflet(width = "100%") %>%
     addTiles(group = "OSM") %>%
     addProviderTiles("Stamen.TonerLite") %>%
-    addCircleMarkers(lat = simEventsNewInTime$lat,
-                     lng = simEventsNewInTime$lng,
-                     group = "Neu erreichte Ereignisse",
-                     popup = "Neu innerhalb 15 Min. erreicht",
-                     color = 'green',
-                     stroke = FALSE,
-                     radius = 8,
-                     fillOpacity = 0.2) %>%
-    addCircleMarkers(lat = simEventsNewNotInTime$lat,
-                     lng = simEventsNewNotInTime$lng,
-                     group = "Neu nicht erreichte Ereignisse",
-                     popup = "Neu nicht mehr erreicht",
+    addCircleMarkers(lat = latNewNotInTime,
+                     lng = lngNewNotInTime,
+                     group = "Neu nicht innerhalb 15 Min. erreichte Einsätze",
                      color = 'red',
                      stroke = FALSE,
-                     radius = 8,
-                     fillOpacity = 0.2) %>%
+                     radius = nrOfMissionsNewNotInTime - 2,
+                     fillOpacity = 0.7) %>%
+    addCircleMarkers(lat = latNewInTime,
+                     lng = lngNewInTime,
+                     group = "Neu innerhalb 15 Min. erreichte Einsätze",
+                     color = 'green',
+                     stroke = FALSE,
+                     radius = nrOfMissionsNewInTime - 2,
+                     fillOpacity = 0.7) %>%
     addLayersControl(
       baseGroups = c("OSM", "Stamen.TonerLite"),
-      overlayGroups = c("Neu erreichte Ereignisse", "Neu nicht erreichte Ereignisse"),
+      overlayGroups = c("Neu innerhalb 15 Min. erreichte Einsätze",
+                        "Neu nicht innerhalb 15 Min. erreichte Einsätze"),
       options = layersControlOptions(collapsed = FALSE)
     )
 }
@@ -191,13 +215,11 @@ mapDtToPoA <- function(simMissions, simMissionsRef) {
     nrOfMissionsFaster[i] <- nrow(
       simMissionsNewFaster[simMissionsNewFaster$lat == latFaster[i],])
   }
-  j <- 1
   for (i in 1:length(latSlower)) {
     lngSlower[i] <- simMissionsNewSlower$lng[
       simMissionsNewSlower$lat == latSlower[i]][1]
-    nrOfMissionsSlower[j] <- nrow(
-      simMissionsNewSlower[simMissionsNewSlower$lat == latSlower[j],])
-    j <- j + 1
+    nrOfMissionsSlower[i] <- nrow(
+      simMissionsNewSlower[simMissionsNewSlower$lat == latSlower[i],])
   }
 
   library(leaflet)
@@ -209,14 +231,14 @@ mapDtToPoA <- function(simMissions, simMissionsRef) {
                      group = "Neu langsamer",
                      color = 'yellow',
                      stroke = FALSE,
-                     radius = nrOfMissionsSlower + 2,
+                     radius = nrOfMissionsSlower - 2,
                      fillOpacity = 0.7) %>%
     addCircleMarkers(lat = latFaster,
                      lng = lngFaster,
                      group = "Neu schneller",
                      color = fhsblue(),
                      stroke = FALSE,
-                     radius = nrOfMissionsFaster + 2,
+                     radius = nrOfMissionsFaster - 2,
                      fillOpacity = 0.7) %>%
     addLayersControl(
       baseGroups = c("OSM", "Stamen.TonerLite"),
