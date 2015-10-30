@@ -173,7 +173,7 @@ mapDtServiceDelta <- function(simEvents, simEventsBefore) {
     )
 }
 
-mapDtPoA <- function(simMissions, simMissionsRef) {
+mapDtToPoA <- function(simMissions, simMissionsRef) {
   simMissionsNewFaster <- plot11R::tableMissionsNewFaster(simMissions, simMissionsBefore)
   simMissionsNewSlower <- plot11R::tableMissionsNewSlower(simMissions, simMissionsBefore)
 
