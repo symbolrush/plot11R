@@ -85,6 +85,15 @@ tableEventsNewInTime <- function(simEvents, simEventsBefore) {
 }
 
 
+tableMissionsNewNotInTime <- function(simMissions, simMissionsBefore) {
+  dtService <- simMissions$dtLaunch + simMissions$dtToPoA
+  dtServiceBefore <- simMissionsBefore$dtLaunch + simMissionsBefore$dtToPoA
+  inTime <- ifelse(dtService < 15*60, TRUE, FALSE)
+  inTimeOld <- ifelse(dtServiceBefore < 15*60, TRUE, FALSE)
+  return(simMissions[!inTime & inTimeOld, ])
+}
+
+
 tableEventsNewNotInTime <- function(simEvents, simEventsBefore) {
   inTime <- ifelse(simEvents$dtService < 15*60, TRUE, FALSE)
   inTimeOld <- ifelse(simEventsBefore$dtService < 15*60, TRUE, FALSE)
