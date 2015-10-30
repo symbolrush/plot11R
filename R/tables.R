@@ -62,6 +62,20 @@ tableDtServicePrio12 <- function(simScenario, simScenarioRef){
   tableDtService(simScenario, simScenarioRef)
 }
 
+#' tableMissionsNewInTime(): Alle Einsätze, die neu innerhalb der Frist erreicht
+#' werden als Tabelle
+#'
+#' @param simMissions A set of simMissions
+#' @param simMissionsBefore A set of simMissions
+#'
+#' @return simMissionsNewInTime A set of simMissions
+tableMissionsNewInTime <- function(simMissions, simMissionsBefore) {
+  dtService <- simMissions$dtLaunch + simMissions$dtToPoA
+  dtServiceBefore <- simMissionsBefore$dtLaunch + simMissionsBefore$dtToPoA
+  inTime <- ifelse(dtService < 15*60, TRUE, FALSE)
+  inTimeBefore <- ifelse(dtServiceBefore < 15*60, TRUE, FALSE)
+  return(simMissions[inTime & !inTimeBefore, ])
+}
 
 
 tableEventsNewInTime <- function(simEvents, simEventsBefore) {
