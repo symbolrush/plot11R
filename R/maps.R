@@ -173,6 +173,55 @@ mapDtServiceDelta <- function(simEvents, simEventsBefore) {
     )
 }
 
+mapDtPoA <- function(simMissions, simMissionsRef) {
+  simMissionsNewFaster <- plot11R::tableMissionsNewFaster(simMissions, simMissionsBefore)
+  simMissionsNewSlower <- plot11R::tableMissionsNewSlower(simMissions, simMissionsBefore)
+
+  nrOfMissionsFaster <- c()
+  nrOfMissionsSlower <- c()
+  latFaster <- c()
+  lngFaster <- c()
+  latSlower <- c()
+  lngSlower <- c()
+  j <- 1
+  for (i in unique(simMissionsNewFaster$lat)) {
+    latFaster[j] <- simMissionsNewFaster$lat[i]
+    lngFaster[j] <- simMissionsNewFaster$lng[i]
+    nrOfMissionsFaster[j] <- nrow(
+      simMissionsNewFaster[simMissionsNewFaster$lat == latFaster[j],])
+  }
+  j <- 1
+  for (i in unique(simMissionsNewSlower$lat)) {
+    latSlower[j] <- simMissionsNewSlower$lat[i]
+    lngSlower[j] <- simMissionsNewSlower$lng[i]
+    nrOfMissionsSlower[j] <- nrow(
+      simMissionsNewSlower[simMissionsNewSlower$lat == latSlower[j],])
+  }
+
+  library(leaflet)
+  leaflet(width = "100%") %>%
+    addTiles(group = "OSM") %>%
+    addProviderTiles("Stamen.TonerLite") %>%
+    addCircleMarkers(lat = latFaster,
+                     lng = lngFaster,
+                     group = "Neu schneller",
+                     color = fhsblue(),
+                     stroke = FALSE,
+                     radius = nrOfMissionsFaster + 5,
+                     fillOpacity = 0.5) %>%
+    addCircleMarkers(lat = latSlower,
+                     lng = lngSlower,
+                     group = "Neu langsamer",
+                     color = 'yellow',
+                     stroke = FALSE,
+                     radius = nrOfMissionsSlower + 5,
+                     fillOpacity = 0.5) %>%
+    addLayersControl(
+      baseGroups = c("OSM", "Stamen.TonerLite"),
+      overlayGroups = c("Neu schneller", "Neu langsamer"),
+      options = layersControlOptions(collapsed = FALSE)
+    )
+}
 
 
 mapPoAClustered <- function(simEvents) {
