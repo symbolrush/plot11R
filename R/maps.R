@@ -174,48 +174,50 @@ mapDtServiceDelta <- function(simEvents, simEventsBefore) {
 }
 
 mapDtToPoA <- function(simMissions, simMissionsRef) {
-  simMissionsNewFaster <- plot11R::tableMissionsNewFaster(simMissions, simMissionsBefore)
-  simMissionsNewSlower <- plot11R::tableMissionsNewSlower(simMissions, simMissionsBefore)
+  simMissionsNewFaster <- plot11R::tableMissionsNewFaster(
+    simMissions, simMissionsRef)
+  simMissionsNewSlower <- plot11R::tableMissionsNewSlower(
+    simMissions, simMissionsRef)
 
   nrOfMissionsFaster <- c()
   nrOfMissionsSlower <- c()
-  latFaster <- c()
+  latFaster <- unique(simMissionsNewFaster$lat)
   lngFaster <- c()
-  latSlower <- c()
+  latSlower <- unique(simMissionsNewSlower$lat)
   lngSlower <- c()
-  j <- 1
-  for (i in unique(simMissionsNewFaster$lat)) {
-    latFaster[j] <- simMissionsNewFaster$lat[i]
-    lngFaster[j] <- simMissionsNewFaster$lng[i]
-    nrOfMissionsFaster[j] <- nrow(
-      simMissionsNewFaster[simMissionsNewFaster$lat == latFaster[j],])
+  for (i in 1:length(latFaster)) {
+    lngFaster[i] <- simMissionsNewFaster$lng[
+      simMissionsNewFaster$lat == latFaster[i]][1]
+    nrOfMissionsFaster[i] <- nrow(
+      simMissionsNewFaster[simMissionsNewFaster$lat == latFaster[i],])
   }
   j <- 1
-  for (i in unique(simMissionsNewSlower$lat)) {
-    latSlower[j] <- simMissionsNewSlower$lat[i]
-    lngSlower[j] <- simMissionsNewSlower$lng[i]
+  for (i in 1:length(latSlower)) {
+    lngSlower[i] <- simMissionsNewSlower$lng[
+      simMissionsNewSlower$lat == latSlower[i]][1]
     nrOfMissionsSlower[j] <- nrow(
       simMissionsNewSlower[simMissionsNewSlower$lat == latSlower[j],])
+    j <- j + 1
   }
 
   library(leaflet)
   leaflet(width = "100%") %>%
     addTiles(group = "OSM") %>%
     addProviderTiles("Stamen.TonerLite") %>%
-    addCircleMarkers(lat = latFaster,
-                     lng = lngFaster,
-                     group = "Neu schneller",
-                     color = fhsblue(),
-                     stroke = FALSE,
-                     radius = nrOfMissionsFaster + 5,
-                     fillOpacity = 0.5) %>%
     addCircleMarkers(lat = latSlower,
                      lng = lngSlower,
                      group = "Neu langsamer",
                      color = 'yellow',
                      stroke = FALSE,
-                     radius = nrOfMissionsSlower + 5,
-                     fillOpacity = 0.5) %>%
+                     radius = nrOfMissionsSlower + 2,
+                     fillOpacity = 0.7) %>%
+    addCircleMarkers(lat = latFaster,
+                     lng = lngFaster,
+                     group = "Neu schneller",
+                     color = fhsblue(),
+                     stroke = FALSE,
+                     radius = nrOfMissionsFaster + 2,
+                     fillOpacity = 0.7) %>%
     addLayersControl(
       baseGroups = c("OSM", "Stamen.TonerLite"),
       overlayGroups = c("Neu schneller", "Neu langsamer"),
