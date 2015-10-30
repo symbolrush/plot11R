@@ -21,7 +21,7 @@ mapOrganisationPrio12 <- function(simScenario) {
       plot11R::kpiMissionsInTimeByOrganisationPrio12(simScenario, i), 0)
     nrOfMissions[j] <- plot11R::kpiMissionsByOrganisationPrio12(simScenario, i)
     color[j] <- plot11R::cpDtService(percentage[j])
-    j <- j+1
+    j <- j + 1
   }
 
   library(leaflet)
@@ -42,6 +42,40 @@ mapOrganisationPrio12 <- function(simScenario) {
     )
 }
 
+
+
+mapPoAPrio12 <- function(simMissions) {
+  lat <- c()
+  lng <- c()
+  percentage <- c()
+  nrOfMissions <- c()
+  color <- c()
+  j <- 1
+  for (i in unique(simMissions$lat)) {
+    lat[j] <- simMissions$lat[simMissions$lat == i][1]
+    lng[j] <- simMissions$lng[simMissions$lat == i][1]
+    percentage[j] <- round(
+      plot11R::kpiMissionsInTimePrio12(simMissions[simMissions$lat == i, ]), 0)
+    nrOfMissions[j] <- length(simMissions$lat[simMissions$lat == i])
+    color[j] <- plot11R::cpDtService(percentage[j])
+    j <- j + 1
+  }
+
+  library(leaflet)
+  leaflet(width = "100%") %>%
+    addTiles(group = "OSM") %>%
+    addProviderTiles("Stamen.TonerLite") %>%
+    addCircleMarkers(lat = lat,
+                     lng = lng,
+                     popup = "popup",
+                     color = color,
+                     stroke = FALSE,
+                     radius = nrOfMissions + 5,
+                     fillOpacity = 0.8) %>%
+    addLayersControl(
+      baseGroups = c("OSM", "Stamen.TonerLite")
+    )
+}
 
 
 
