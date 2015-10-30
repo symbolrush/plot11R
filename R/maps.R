@@ -44,6 +44,12 @@ mapOrganisationPrio12 <- function(simScenario) {
 
 
 
+#' mapPoAPrio12: Die famose Karte aufgelöst nach Einsatzort (für Bern
+#' bedeutet das aufgelöst nach Ort)
+#'
+#' @param simMissions
+#'
+#' @return mapPoAPrio12 A leaflet map
 mapPoAPrio12 <- function(simMissions) {
   lat <- c()
   lng <- c()
@@ -67,7 +73,9 @@ mapPoAPrio12 <- function(simMissions) {
     addProviderTiles("Stamen.TonerLite") %>%
     addCircleMarkers(lat = lat,
                      lng = lng,
-                     popup = "popup",
+                     popup = paste0(
+                       nrOfMissions, " Einsätze, davon ",
+                       percentage, " innerhalb 15 Min. erreicht."),
                      color = color,
                      stroke = FALSE,
                      radius = nrOfMissions + 5,
