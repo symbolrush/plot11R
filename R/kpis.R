@@ -1,3 +1,15 @@
+#' kpiMissionsInTime: Calculates the percentage of events which
+#' have a dtService of less than 15min. In other words: which are in time.
+#'
+#' @param simMissions A set of simMissions
+#'
+#' @return MissionsInTime A percentage of the fraction of the events in time
+kpiMissionsInTime <- function(simMissions) {
+  return(
+    round(
+      nrow(simMissions[simMissions$dtService < 15*60,])/nrow(simMissions)*100, 0))
+}
+
 #' kpiEventsInTime: Calculates the percentage of events which
 #' have a dtService of less than 15min. In other words: which are in time.
 #'
@@ -68,6 +80,12 @@ kpiEventsInTimeByOrganisationPrio12 <- function(simScenario, organisation) {
   nrow(simEvents[simEvents$dtService < 15*60, ])/nrow(simEvents)*100
 }
 
+kpiMissionsInTimeByOrganisationPrio12 <- function(simScenario, organisation) {
+  simMissions <- filterPrio12(simScenario$missions[simScenario$missions$organisation == organisation, ])
+  simMissions$dtService <- simMissions$dtLaunch + simMissions$dtToPoA
+  nrow(simMissions[simMissions$dtService < 15*60, ])/nrow(simMissions)*100
+}
+
 kpiEventsByOrganisationPrio12 <- function(simScenario, organisation) {
   #vehicleId <- simScenario$vehicles$id[simScenario$vehicles$organisation == organisation]
  # eventId <- unique(simScenario$missions$eventId[simScenario$missions$vehicleId %in% vehicleId])
@@ -76,6 +94,13 @@ kpiEventsByOrganisationPrio12 <- function(simScenario, organisation) {
   simEvents <- filterPrio12(simEvents)
   nrow(simEvents)
 }
+
+
+kpiMissionsByOrganisationPrio12 <- function(simScenario, organisation) {
+  nrow(filterPrio12(simScenario$missions[simScenario$missions$organisation == organisation, ]))
+}
+
+
 
 #' kpiEventsFaster(): Anzahl der Events, welche schneller als im
 #' zugrundeliegenden Referenzszenario erreicht wurden.
