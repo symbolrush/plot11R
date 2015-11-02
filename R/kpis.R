@@ -5,9 +5,10 @@
 #'
 #' @return MissionsInTime A percentage of the fraction of the events in time
 kpiMissionsInTime <- function(simMissions) {
+  dtService <- simMissions$dtLaunch + simMissions$dtToPoA
   return(
     round(
-      nrow(simMissions[simMissions$dtService < 15*60,])/nrow(simMissions)*100, 0))
+      nrow(simMissions[dtService < 15*60,])/nrow(simMissions)*100, 0))
 }
 
 #' kpiEventsInTime: Calculates the percentage of events which
@@ -100,6 +101,10 @@ kpiMissionsByOrganisationPrio12 <- function(simScenario, organisation) {
   nrow(filterPrio12(simScenario$missions[simScenario$missions$organisation == organisation, ]))
 }
 
+kpiMissionsByOrganisationThatDrovePrio12 <- function(simScenario, organisation) {
+  vehicleIdOrg <- simScenario$vehicles$id[simScenario$vehicles$organisation == organisation]
+  nrow(filterPrio12(simScenario$missions[simScenario$missions$vehicleId %in% vehicleIdOrg, ]))
+}
 
 
 #' kpiEventsFaster(): Anzahl der Events, welche schneller als im
