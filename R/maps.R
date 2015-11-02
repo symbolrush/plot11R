@@ -15,8 +15,10 @@ mapOrganisationPrio12 <- function(simScenario) {
   color <- c()
   j <- 1
   for (i in organisation) {
-    lat[j] <- mean(simScenario$vehicles$lat[simScenario$vehicles$organisation == i])
-    lng[j] <- mean(simScenario$vehicles$lng[simScenario$vehicles$organisation == i])
+    lat[j] <- mean(
+      simScenario$vehicles$lat[simScenario$vehicles$organisation == i])
+    lng[j] <- mean(
+      simScenario$vehicles$lng[simScenario$vehicles$organisation == i])
     percentage[j] <- round(
       plot11R::kpiMissionsInTimeByOrganisationPrio12(simScenario, i), 0)
     nrOfMissions[j] <- plot11R::kpiMissionsByOrganisationPrio12(simScenario, i)
@@ -35,7 +37,9 @@ mapOrganisationPrio12 <- function(simScenario) {
       # radius = nrOfEvents/50,
       radius = nrOfMissions/150,
       color = color,
-      popup = paste0(organisation, ': ',nrOfMissions, ' Einsätze, davon ', percentage, '% innerhalb 15min. erreicht.'),
+      popup = paste0(organisation, ': ',nrOfMissions,
+                     ' Einsätze, davon ', percentage,
+                     '% innerhalb 15min. erreicht.'),
       fillOpacity = 0.6) %>%
     addLayersControl(
       baseGroups = c("OSM", "Stamen.TonerLite")
@@ -44,13 +48,13 @@ mapOrganisationPrio12 <- function(simScenario) {
 
 
 
-#' mapPoAPrio12: Die famose Karte aufgelöst nach Einsatzort (für Bern
+#' mapDtServicePoA: Die famose Karte aufgelöst nach Einsatzort (für Bern
 #' bedeutet das aufgelöst nach Ort)
 #'
 #' @param simMissions
 #'
-#' @return mapPoAPrio12 A leaflet map
-mapPoAPrio12 <- function(simMissions) {
+#' @return mapDtServicePoA A leaflet map
+mapDtServicePoA <- function(simMissions) {
   lat <- unique(simMissions$lat)
   lng <- c()
   nrOfMissions <- c()
@@ -62,8 +66,8 @@ mapPoAPrio12 <- function(simMissions) {
       simMissions$lat == lat[i]][1]
     nrOfMissions[i] <- nrow(
       filterPrio12(simMissions[simMissions$lat == lat[i],]))
-    percentage[i] <- round(
-      plot11R::kpiMissionsInTime(filterPrio12(simMissions[simMissions$lat == i, ])), 0)
+    percentage[i] <- plot11R::kpiMissionsInTime(
+        filterPrio12(simMissions[simMissions$lat == lat[i], ]))
     color[i] <- plot11R::cpDtService(percentage[i])
   }
 
@@ -75,7 +79,7 @@ mapPoAPrio12 <- function(simMissions) {
                      lng = lng,
                      popup = paste0(
                        nrOfMissions, " Einsätze, davon ",
-                       percentage, " innerhalb 15 Min. erreicht."),
+                       percentage, "% innerhalb 15 Min. erreicht."),
                      color = color,
                      stroke = FALSE,
                      radius = nrOfMissions/150 + 5,
@@ -132,12 +136,15 @@ mapDtServiceDeltaInTime <- function(simMissions, simMissionsRef) {
     lngNewNotInTime[i] <- simMissionsNewNotInTime$lng[
       simMissionsNewNotInTime$lat == latNewNotInTime[i]][1]
     nrOfMissionsNewNotInTime[i] <- nrow(
-      simMissionsNewNotInTime[simMissionsNewNotInTime$lat == latNewNotInTime[i],])
+      simMissionsNewNotInTime[
+        simMissionsNewNotInTime$lat == latNewNotInTime[i],])
   }
 
 
-#   simEventsNewInTime <- plot11R::tableEventsNewInTime(simEvents, simEventsBefore)
-#   simEventsNewNotInTime <- plot11R::tableEventsNewNotInTime(simEvents, simEventsBefore)
+#   simEventsNewInTime <- plot11R::tableEventsNewInTime(
+#  simEvents, simEventsBefore)
+#   simEventsNewNotInTime <- plot11R::tableEventsNewNotInTime(
+#  simEvents, simEventsBefore)
 
   library(leaflet)
   leaflet(width = "100%") %>%
