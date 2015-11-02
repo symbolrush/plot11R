@@ -1,3 +1,55 @@
+#' tableNrOfMissionsByOrganisation(): Tabelle mit den explizit gemachten
+#' Verschiebungen zwischen den Rettungsdiensten.
+#'
+#' @param simScenario A simScenario
+#' @param simScenarioRef A simScenario
+#'
+#' @return tableNrOfMissionsByOrganisation A data.frame
+tableNrOfMissionsByOrganisation <- function(simScenario, simScenarioRef) {
+  simScenario$missions <- filterPrio12(simScenario$missions)
+  simScenarioRef$missions <- filterPrio12(simScenarioRef$missions)
+  organisation = sort(unique(simScenario$missions$organisation))
+  table <- data.frame(
+    Rettungsdienst = organisation
+  )
+  for (i in 1:length(organisation)) {
+    nrOfMissions <- c(1:length(organisation))
+    vehicleIdOrgI <- simScenario$vehicles$id[
+      simScenario$vehicles$organisation == organisation[i]]
+    for (j in 1:length(organisation)) {
+      vehicleIdOrgJ <- simScenarioRef$vehicles$id[
+        simScenarioRef$vehicles$organisation == organisation[j]]
+      if (organisation[i] != organisation[j]) {
+        BeforeOrgI <- simScenarioRef$missions$id[
+          simScenarioRef$missions$vehicleId %in% vehicleIdOrgI]
+        BeforeOrgJ <- simScenarioRef$missions$id[
+          simScenarioRef$missions$vehicleId %in% vehicleIdOrgJ]
+        AfterOrgI <- simScenario$missions$id[
+          simScenario$missions$vehicleId %in% vehicleIdOrgI]
+        AfterOrgJ <- simScenario$missions$id[
+          simScenario$missions$vehicleId %in% vehicleIdOrgJ]
+
+        won <- simScenario$missions
+        won <- won[won$id %in% AfterOrgJ, ]
+        won <- won[won$id %in% BeforeOrgI, ]
+
+        lost <- simScenario$missions
+        lost <- lost[lost$id %in% BeforeOrgJ, ]
+        lost <- lost[lost$id %in% AfterOrgI, ]
+
+        nrOfMissions[j] <- nrow(won) - nrow(lost)
+      } else {
+        nrOfMissions[j] <- "x"
+      }
+    }
+    table <- cbind(table, nrOfMissions)
+  }
+  names(table) <- c("Rettungsdienst", organisation, "Total")
+  return(table)
+}
+
+
+
 #' tableDtService(): Liefert eine Tabelle mit ausgesuchten Spalten zweier Sets
 #' von simMissions
 #'
