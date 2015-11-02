@@ -204,6 +204,12 @@ mapDtServiceDelta <- function(simEvents, simEventsBefore) {
     )
 }
 
+#' mapDtToPoA(): Die blau/gelb Karte aufgelöst nach PoA
+#'
+#' @param simMissions A set of simMissions
+#' @param simMissionsRef A set of simMissions
+#'
+#' @return mapDtToPoA A leaflet map
 mapDtToPoA <- function(simMissions, simMissionsRef) {
   simMissionsNewFaster <- plot11R::tableMissionsNewFaster(
     simMissions, simMissionsRef)
@@ -228,6 +234,7 @@ mapDtToPoA <- function(simMissions, simMissionsRef) {
     nrOfMissionsSlower[i] <- nrow(
       simMissionsNewSlower[simMissionsNewSlower$lat == latSlower[i],])
   }
+
 
   library(leaflet)
   leaflet(width = "100%") %>%
