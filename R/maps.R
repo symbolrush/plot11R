@@ -130,15 +130,27 @@ mapDtServiceDeltaInTime <- function(simMissions, simMissionsRef) {
     lngNewInTime[i] <- simMissionsNewInTime$lng[
       simMissionsNewInTime$lat == latNewInTime[i]][1]
     nrOfMissionsNewInTime[i] <- nrow(
-      simMissionsNewInTime[simMissionsNewInTime$lat == latNewInTime[i],])
+      simMissionsNewInTime[simMissionsNewInTime$lat == latNewInTime[i],]) - nrow(
+        simMissionsNewNotInTime[
+          simMissionsNewNotInTime$lat == latNewInTime[i],]
+      )
   }
   for (i in 1:length(latNewNotInTime)) {
     lngNewNotInTime[i] <- simMissionsNewNotInTime$lng[
       simMissionsNewNotInTime$lat == latNewNotInTime[i]][1]
     nrOfMissionsNewNotInTime[i] <- nrow(
       simMissionsNewNotInTime[
-        simMissionsNewNotInTime$lat == latNewNotInTime[i],])
+        simMissionsNewNotInTime$lat == latNewNotInTime[i],]) - nrow(
+          simMissionsNewInTime[simMissionsNewInTime$lat == latNewNotInTime[i],]
+        )
   }
+
+
+  nrOfMissionsNewInTime <- ifelse(nrOfMissionsNewInTime > 0, nrOfMissionsNewInTime, 0)
+  nrOfMissionsNewNotInTime <- ifelse(nrOfMissionsNewNotInTime > 0, nrOfMissionsNewNotInTime, 0)
+
+
+
 
 
 #   simEventsNewInTime <- plot11R::tableEventsNewInTime(
@@ -154,15 +166,17 @@ mapDtServiceDeltaInTime <- function(simMissions, simMissionsRef) {
                      lng = lngNewNotInTime,
                      group = "Neu nicht innerhalb 15 Min. erreichte Einsätze",
                      color = 'red',
+                     popup = paste0(nrOfMissionsNewNotInTime, " Einsätze sind neu nicht innerhalb 15 min. erreicht"),
                      stroke = FALSE,
-                     radius = nrOfMissionsNewNotInTime - 2,
+                     radius = nrOfMissionsNewNotInTime,
                      fillOpacity = 0.7) %>%
     addCircleMarkers(lat = latNewInTime,
                      lng = lngNewInTime,
                      group = "Neu innerhalb 15 Min. erreichte Einsätze",
                      color = 'green',
+                     popup = paste0(nrOfMissionsNewInTime, " Einsätze sind neu innerhalb 15 min. erreicht"),
                      stroke = FALSE,
-                     radius = nrOfMissionsNewInTime - 2,
+                     radius = nrOfMissionsNewInTime,
                      fillOpacity = 0.7) %>%
     addLayersControl(
       baseGroups = c("OSM", "Stamen.TonerLite"),
@@ -226,14 +240,18 @@ mapDtToPoA <- function(simMissions, simMissionsRef) {
     lngFaster[i] <- simMissionsNewFaster$lng[
       simMissionsNewFaster$lat == latFaster[i]][1]
     nrOfMissionsFaster[i] <- nrow(
-      simMissionsNewFaster[simMissionsNewFaster$lat == latFaster[i],])
+      simMissionsNewFaster[simMissionsNewFaster$lat == latFaster[i],]) - nrow(
+        simMissionsNewSlower[simMissionsNewSlower$lat == latFaster[i],])
   }
   for (i in 1:length(latSlower)) {
     lngSlower[i] <- simMissionsNewSlower$lng[
       simMissionsNewSlower$lat == latSlower[i]][1]
     nrOfMissionsSlower[i] <- nrow(
-      simMissionsNewSlower[simMissionsNewSlower$lat == latSlower[i],])
+      simMissionsNewSlower[simMissionsNewSlower$lat == latSlower[i],]) - nrow(
+        simMissionsNewFaster[simMissionsNewFaster$lat == latSlower[i],])
   }
+  nrOfMissionsFaster <- ifelse(nrOfMissionsFaster > 0, nrOfMissionsFaster, 0)
+  nrOfMissionsSlower <- ifelse(nrOfMissionsSlower > 0, nrOfMissionsSlower, 0)
 
 
   library(leaflet)
@@ -244,15 +262,17 @@ mapDtToPoA <- function(simMissions, simMissionsRef) {
                      lng = lngSlower,
                      group = "Neu langsamer",
                      color = 'yellow',
+                     popup = paste0(nrOfMissionsSlower, " Einsätze sind neu langsamer"),
                      stroke = FALSE,
-                     radius = nrOfMissionsSlower - 2,
+                     radius = nrOfMissionsSlower/nrow(simMissionsNewFaster)*300,
                      fillOpacity = 0.7) %>%
     addCircleMarkers(lat = latFaster,
                      lng = lngFaster,
                      group = "Neu schneller",
                      color = fhsblue(),
+                     popup = paste0(nrOfMissionsFaster, " Einsätze sind neu schneller"),
                      stroke = FALSE,
-                     radius = nrOfMissionsFaster - 2,
+                     radius = nrOfMissionsFaster/nrow(simMissionsNewFaster)*300,
                      fillOpacity = 0.7) %>%
     addLayersControl(
       baseGroups = c("OSM", "Stamen.TonerLite"),
