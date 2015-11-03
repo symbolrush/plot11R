@@ -35,6 +35,21 @@ filterPrio12 <- function(simEvents) {
 }
 
 
+#' filterPrio1: Provisorische Funktion für das Filtern aller Events mit
+#' Priorität 1. Achtung: Die Logik beim rausfiltern ist nicht in allen
+#' Teilen von plot11R konsistent gelöst. Teilweise geschieht die Filterung
+#' explizit vor dem Funktionisaufruf, teilweise implizit in der Funktion
+#'
+#' @param simData A set of simMissions or simEvents
+#'
+#' @return simEventsPrio12 A subset of simEvents with events of priority 1 & 2
+filterPrio1 <- function(simData) {
+  return(simData[simData$priority == 1, ])
+}
+
+
+
+
 filterLUKS <- function(simMissions) {
   simMissions[!(simMissions$vehicleId %in% c(23:26,1000)),]
 }
