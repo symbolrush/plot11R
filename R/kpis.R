@@ -41,6 +41,25 @@ kpiEventsInTimeDelta <- function(simEvents, simEventsBefore) {
 }
 
 
+#' kpiMissionsInTimeDelta: Calculates the delta of the percentage of the missions
+#' in time between two sets of simMissions. Rounded to 1 decimalplace.
+#'
+#' @param simMissions A set of simMissions
+#' @param simMissionsRef A set of simMissions
+#'
+#' @return MissionsInTimeDelta A numeric
+kpiMissionsInTimeDelta <- function(simMissions, simMissionsRef) {
+  percentage <- nrow(
+    simMissions[(simMissions$dtLaunch + simMissions$dtToPoA) < 15*60,])/
+    nrow(simMissions)*100
+  percentageRef <- nrow(
+    simMissionsRef[(simMissionsRef$dtLaunch + simMissionsRef$dtToPoA) < 15*60,])/
+    nrow(simMissionsRef)*100
+  round(percentage - percentageRef, 1)
+}
+
+
+
 #' kpiEventsNewInTime(): Errechnet die Anzahl der Ereignisse, die neu innerhalb
 #' 15 min. erreicht werden.
 #'
