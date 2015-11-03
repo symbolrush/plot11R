@@ -17,7 +17,6 @@ boxDtLaunchByVehicleName <- function(simScenario) {
       )
     }
   }
-  return("OK")
 }
 
 
