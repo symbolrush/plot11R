@@ -1,3 +1,19 @@
+tableVehicles <- function(simVehicles) {
+  simVehicles <- simVehicles[,c(1,4:8)]
+  for (i in 1:length(simVehicles$shiftFromTime)) {
+    simVehicles$shiftFromTime[i] <- simTimeR::as.charTime(
+      as.numeric(simVehicles$shiftFromTime[i]))
+    simVehicles$shiftToTime[i] <- simTimeR::as.charTime(
+      as.numeric(simVehicles$shiftToTime[i]))
+  }
+  names(simVehicles) <- c(
+    "Dienstbezeichnung",
+    "Von (Tag)", "Bis (Tag)", "Von (Zeit)", "Bis (Zeit)", "Wochentag"
+  )
+  return(simVehicles)
+}
+
+
 #' tableNrOfMissionsByOrganisation(): Tabelle mit den explizit gemachten
 #' Verschiebungen zwischen den Rettungsdiensten.
 #'
@@ -44,7 +60,7 @@ tableNrOfMissionsByOrganisation <- function(simScenario, simScenarioRef) {
     }
     table <- cbind(table, nrOfMissions)
   }
-  names(table) <- c("Rettungsdienst", organisation, "Total")
+  names(table) <- c("Rettungsdienst", organisation)
   return(table)
 }
 
