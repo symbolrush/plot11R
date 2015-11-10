@@ -38,5 +38,4 @@ boxDtLaunchByOrganisation <- function(simMissions) {
         range = 0
       )
   }
-  return("OK")
 }
