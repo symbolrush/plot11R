@@ -308,9 +308,14 @@ mapVehiclesClustered <- function(simVehicles) {
     addCircleMarkers(lat = simVehicles$lat,
                      lng = simVehicles$lng,
                      popup = paste(simVehicles$name),
-                     color = fhsblue(),
+                     color = 'gold',
                      stroke = FALSE,
-                     radius = 10,
+                     radius = 5,
                      fillOpacity = 0.8,
-                     clusterOptions = markerClusterOptions())
+                     clusterOptions = markerClusterOptions(iconCreateFunction = JS("function (cluster) {
+    var childCount = cluster.getChildCount();
+    var c = ' marker-cluster-';
+    c += 'medium';
+    return new L.DivIcon({ html: '<div><span>' + childCount + '</span></div>', className: 'marker-cluster' + c, iconSize: new L.Point(40, 40) });
+  }")))
 }
